@@ -7,7 +7,7 @@ fun main() {
     }
 
     fun part2(input: List<String>): Int {
-        fun acc(card: Card, lookup: Map<CardId, Card>): List<Card> {
+        fun acc(card: ScratchCard, lookup: Map<CardId, ScratchCard>): List<ScratchCard> {
             if (card.matchCount == 0) {
                 return listOf(card)
             }
@@ -17,8 +17,8 @@ fun main() {
             } + card
         }
 
-        val cards: List<Card> = input.map { line -> line.card() }
-        val lookup: Map<CardId, Card> = cards.associateBy { it.id }
+        val cards: List<ScratchCard> = input.map { line -> line.card() }
+        val lookup: Map<CardId, ScratchCard> = cards.associateBy { it.id }
         return cards.flatMap { acc(it, lookup) }.size
     }
 
@@ -34,14 +34,14 @@ fun main() {
 
 typealias CardId = Int
 
-data class Card(val id: CardId, val matchCount: Int)
+data class ScratchCard(val id: CardId, val matchCount: Int)
 
-fun String.card(): Card {
+fun String.card(): ScratchCard {
     val (card, allNumbers) = this.split(":\\s+".toRegex())
     val cardId = card.split("\\s+".toRegex())[1].toInt()
     val (winning, numbers) = allNumbers.split("\\s+\\|\\s+".toRegex())
     val count = winning.toSet().intersect(numbers.toSet()).count()
-    return Card(cardId, count)
+    return ScratchCard(cardId, count)
 }
 
 private fun String.toSet(): Set<Int> = split("\\s+".toRegex()).map { it.toInt() }.toSet()
